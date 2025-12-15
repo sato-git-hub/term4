@@ -21,7 +21,7 @@ buttons.forEach((button) => {
     const userHand = event.target.textContent;
     //チートモードONの場合のcpuHand
     if (checkBox.checked) {
-      const cpuHand = cpuResult(userHand);
+      const cpuHand = decideCpuHand(userHand);
       Text(userHand, cpuHand);
     } else {
       //cpuの手をランダムに決める
@@ -34,7 +34,7 @@ buttons.forEach((button) => {
 });
 
 //チートモード時のcpuのhandを決定
-function cpuResult(userHand) {
+function decideCpuHand(userHand) {
   for (let i = 0; i < win.length; i++) {
     if (userHand === win[i][0]) {
       return win[i][1];
@@ -42,15 +42,16 @@ function cpuResult(userHand) {
   }
 }
 
-function arrayEqual(userHand, cpuHand) {
+function judgeWinner(userHand, cpuHand) {
+  //戻り値 条件に合えばtrue 合わなければfalse
   return win.some((i) => {
     return i[0] === userHand && i[1] === cpuHand;
   });
 }
 
 //判定
-function Result(userHand, cpuHand) {
-  if (arrayEqual(userHand, cpuHand)) {
+function judge(userHand, cpuHand) {
+  if (judgeWinner(userHand, cpuHand)) {
     result.classList.remove("draw", "lose");
     result.classList.add("win");
     return "勝ち";
@@ -67,7 +68,7 @@ function Result(userHand, cpuHand) {
 
 //画面表示テキスト
 function Text(userHand, cpuHand) {
-  const finalResult = Result(userHand, cpuHand);
+  const finalResult = judge(userHand, cpuHand);
   const cheatStatus = checkBox.checked ? " (チートON)" : "";
   result.innerHTML = `あなた:${userHand} 相手:${cpuHand} → ${finalResult}${cheatStatus}`;
 }
